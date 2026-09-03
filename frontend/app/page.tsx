@@ -10,6 +10,7 @@ export default function LoginPage() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false);
 
     const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -40,7 +41,6 @@ export default function LoginPage() {
                 return;
             }
 
-            // Store authentication information
             localStorage.setItem("token", data.token);
             localStorage.setItem("user", JSON.stringify(data.user));
 
@@ -52,156 +52,227 @@ export default function LoginPage() {
         setLoading(false);
     };
 
+    const demoAccounts = [
+        {
+            role: "Admin",
+            email: "admin@test.com",
+            icon: "👤",
+        },
+        {
+            role: "HR",
+            email: "hr@test.com",
+            icon: "👥",
+        },
+        {
+            role: "Sales",
+            email: "sales@test.com",
+            icon: "📊",
+        },
+        {
+            role: "Support",
+            email: "support@test.com",
+            icon: "🎧",
+        },
+        {
+            role: "Finance",
+            email: "finance@test.com",
+            icon: "💰",
+        },
+    ];
+
     return (
-        <main
-            style={{
-                minHeight: "100vh",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                background: "#f4f7fb",
-                padding: "20px",
-            }}
-        >
-            <div
-                style={{
-                    width: "100%",
-                    maxWidth: "420px",
-                    background: "white",
-                    padding: "40px",
-                    borderRadius: "16px",
-                    boxShadow: "0 10px 30px rgba(0,0,0,0.08)",
-                }}
-            >
-                <div style={{ textAlign: "center", marginBottom: "30px" }}>
-                    <h1
-                        style={{
-                            fontSize: "28px",
-                            fontWeight: "700",
-                            marginBottom: "8px",
-                            color: "#111827",
-                        }}
-                    >
-                        Employee Portal
-                    </h1>
+        <main className="login-page">
+            {/* Decorative background elements */}
+            <div className="decorative-circle circle-one"></div>
+            <div className="decorative-circle circle-two"></div>
+            <div className="decorative-dots dots-one"></div>
+            <div className="decorative-dots dots-two"></div>
 
-                    <p style={{ color: "#6b7280" }}>
-                        Sign in to access your workspace
-                    </p>
-                </div>
-
-                <form onSubmit={handleLogin}>
-                    <label
-                        style={{
-                            display: "block",
-                            marginBottom: "8px",
-                            fontWeight: "600",
-                            color: "#374151",
-                        }}
-                    >
-                        Email
-                    </label>
-
-                    <input
-                        type="email"
-                        placeholder="Enter your email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "12px",
-                            marginBottom: "20px",
-                            border: "1px solid #d1d5db",
-                            borderRadius: "8px",
-                            fontSize: "15px",
-                        }}
-                    />
-
-                    <label
-                        style={{
-                            display: "block",
-                            marginBottom: "8px",
-                            fontWeight: "600",
-                            color: "#374151",
-                        }}
-                    >
-                        Password
-                    </label>
-
-                    <input
-                        type="password"
-                        placeholder="Enter your password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        required
-                        style={{
-                            width: "100%",
-                            padding: "12px",
-                            marginBottom: "20px",
-                            border: "1px solid #d1d5db",
-                            borderRadius: "8px",
-                            fontSize: "15px",
-                        }}
-                    />
-
-                    {error && (
-                        <div
-                            style={{
-                                background: "#fee2e2",
-                                color: "#b91c1c",
-                                padding: "12px",
-                                borderRadius: "8px",
-                                marginBottom: "20px",
-                                fontSize: "14px",
-                            }}
-                        >
-                            {error}
+            <section className="login-container">
+                {/* LEFT BRANDING PANEL */}
+                <div className="login-brand">
+                    <div className="brand-content">
+                        <div className="brand-icon">
+                            <span>👥</span>
                         </div>
-                    )}
 
-                    <button
-                        type="submit"
-                        disabled={loading}
-                        style={{
-                            width: "100%",
-                            padding: "13px",
-                            background: "#111827",
-                            color: "white",
-                            border: "none",
-                            borderRadius: "8px",
-                            fontSize: "16px",
-                            fontWeight: "600",
-                            cursor: "pointer",
-                        }}
-                    >
-                        {loading ? "Signing in..." : "Sign In"}
-                    </button>
-                </form>
+                        <h1>Employee Portal</h1>
 
-                <div
-                    style={{
-                        marginTop: "25px",
-                        padding: "15px",
-                        background: "#f9fafb",
-                        borderRadius: "8px",
-                        fontSize: "13px",
-                        color: "#6b7280",
-                    }}
-                >
-                    <strong>Demo accounts</strong>
-                    <br />
-                    Admin: admin@test.com
-                    <br />
-                    HR: hr@test.com
-                    <br />
-                    Sales: sales@test.com
-                    <br />
-                    Support: support@test.com
-                    <br />
-                    Finance: finance@test.com
+                        <p className="brand-tagline">
+                            Your workspace, your place.
+                        </p>
+
+                        {/* Security illustration */}
+                        <div className="security-illustration">
+                            <div className="laptop">
+                                <div className="laptop-screen">
+                                    <div className="shield">
+                                        ✓
+                                    </div>
+                                </div>
+
+                                <div className="laptop-base"></div>
+                            </div>
+
+                            <div className="plant">
+                                🌿
+                            </div>
+
+                            <div className="lock">
+                                🔒
+                            </div>
+                        </div>
+
+                        <div className="brand-message">
+                            <strong>Secure. Simple. Seamless.</strong>
+                            <span>
+                                Everything you need to do your best work.
+                            </span>
+                        </div>
+                    </div>
                 </div>
-            </div>
+
+                {/* RIGHT LOGIN PANEL */}
+                <div className="login-form-panel">
+                    <div className="form-content">
+                        <div className="welcome-section">
+                            <h2>Welcome back! 👋</h2>
+                            <p>Sign in to access your workspace</p>
+                        </div>
+
+                        <form onSubmit={handleLogin}>
+                            {/* EMAIL */}
+                            <div className="input-group">
+                                <label htmlFor="email">Email</label>
+
+                                <div className="input-wrapper">
+                                    <span className="input-icon">
+                                        ✉
+                                    </span>
+
+                                    <input
+                                        id="email"
+                                        type="email"
+                                        placeholder="Enter your email"
+                                        value={email}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            {/* PASSWORD */}
+                            <div className="input-group password-group">
+                                <label htmlFor="password">Password</label>
+
+                                <div className="input-wrapper">
+                                    <span className="input-icon">
+                                        🔒
+                                    </span>
+
+                                    <input
+                                        id="password"
+                                        type={
+                                            showPassword
+                                                ? "text"
+                                                : "password"
+                                        }
+                                        placeholder="Enter your password"
+                                        value={password}
+                                        onChange={(e) =>
+                                            setPassword(e.target.value)
+                                        }
+                                        required
+                                    />
+
+                                    <button
+                                        type="button"
+                                        className="password-toggle"
+                                        onClick={() =>
+                                            setShowPassword(!showPassword)
+                                        }
+                                        aria-label="Toggle password visibility"
+                                    >
+                                        {showPassword ? "🙈" : "👁"}
+                                    </button>
+                                </div>
+                            </div>
+
+                            {/* ERROR */}
+                            {error && (
+                                <div className="login-error">
+                                    <span>⚠</span>
+                                    {error}
+                                </div>
+                            )}
+
+                            {/* SIGN IN */}
+                            <button
+                                type="submit"
+                                className="signin-button"
+                                disabled={loading}
+                            >
+                                {loading ? (
+                                    <>
+                                        <span className="spinner"></span>
+                                        Signing in...
+                                    </>
+                                ) : (
+                                    <>
+                                        Sign In
+                                        <span className="arrow">→</span>
+                                    </>
+                                )}
+                            </button>
+                        </form>
+
+                        {/* DEMO ACCOUNTS */}
+                        <div className="demo-section">
+                            <div className="demo-heading">
+                                <span></span>
+                                <p>Demo accounts</p>
+                                <span></span>
+                            </div>
+
+                            <div className="demo-list">
+                                {demoAccounts.map((account) => (
+                                    <button
+                                        key={account.role}
+                                        type="button"
+                                        className="demo-account"
+                                        onClick={() => {
+                                            setEmail(account.email);
+                                            setPassword("");
+                                            setError("");
+                                        }}
+                                    >
+                                        <div className="demo-icon">
+                                            {account.icon}
+                                        </div>
+
+                                        <div className="demo-details">
+                                            <strong>
+                                                {account.role}
+                                            </strong>
+
+                                            <span>
+                                                {account.email}
+                                            </span>
+                                        </div>
+                                    </button>
+                                ))}
+                            </div>
+                        </div>
+
+                        <div className="security-note">
+                            <span>🛡️</span>
+                            <span>Your data is secure with us</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
     );
 }
