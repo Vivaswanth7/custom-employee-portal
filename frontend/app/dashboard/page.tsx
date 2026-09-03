@@ -15,6 +15,8 @@ type Service = {
     description: string;
     endpoint: string;
     permission: string;
+    icon: string;
+    category: string;
 };
 
 const services: Service[] = [
@@ -23,24 +25,32 @@ const services: Service[] = [
         description: "HR and employee management",
         endpoint: "/api/zoho/people",
         permission: "HR",
+        icon: "👥",
+        category: "Human Resources",
     },
     {
         name: "Zoho CRM",
         description: "Customer relationship management",
         endpoint: "/api/zoho/crm",
         permission: "Sales",
+        icon: "📊",
+        category: "Sales",
     },
     {
         name: "Zoho Desk",
         description: "Customer support and ticket management",
         endpoint: "/api/zoho/desk",
         permission: "Support",
+        icon: "🎧",
+        category: "Support",
     },
     {
         name: "Zoho Books",
         description: "Finance and accounting management",
         endpoint: "/api/zoho/books",
         permission: "Finance",
+        icon: "💰",
+        category: "Finance",
     },
 ];
 
@@ -96,7 +106,9 @@ export default function Dashboard() {
 
             if (!response.ok) {
                 setMessage(
-                    `❌ ${service.name}: ${data.message || "Access denied"}`
+                    `❌ ${service.name}: ${
+                        data.message || "Access denied"
+                    }`
                 );
                 setLoadingService("");
                 return;
@@ -104,7 +116,9 @@ export default function Dashboard() {
 
             setMessage(`✅ ${data.message}`);
         } catch (error) {
-            setMessage("Unable to connect to backend server.");
+            setMessage(
+                "❌ Unable to connect to backend server."
+            );
         }
 
         setLoadingService("");
@@ -112,15 +126,9 @@ export default function Dashboard() {
 
     if (!user) {
         return (
-            <main
-                style={{
-                    minHeight: "100vh",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                }}
-            >
-                Loading...
+            <main className="dashboard-loading">
+                <div className="loading-spinner"></div>
+                <p>Loading your workspace...</p>
             </main>
         );
     }
@@ -129,226 +137,296 @@ export default function Dashboard() {
         user.role === "Admin"
             ? services
             : services.filter(
-                  (service) => service.permission === user.role
+                  (service) =>
+                      service.permission === user.role
               );
 
-    return (
-        <main
-            style={{
-                minHeight: "100vh",
-                background: "#f4f7fb",
-                padding: "30px",
-            }}
-        >
-            <div
-                style={{
-                    maxWidth: "1100px",
-                    margin: "0 auto",
-                }}
-            >
-                {/* Header */}
-                <div
-                    style={{
-                        background: "white",
-                        padding: "24px",
-                        borderRadius: "14px",
-                        display: "flex",
-                        justifyContent: "space-between",
-                        alignItems: "center",
-                        marginBottom: "25px",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
-                    }}
-                >
-                    <div>
-                        <h1
-                            style={{
-                                margin: 0,
-                                fontSize: "28px",
-                                color: "#111827",
-                            }}
-                        >
-                            Employee Dashboard
-                        </h1>
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((part) => part[0])
+            .join("")
+            .slice(0, 2)
+            .toUpperCase();
+    };
 
-                        <p
-                            style={{
-                                marginTop: "6px",
-                                color: "#6b7280",
-                            }}
-                        >
-                            Welcome, {user.name}
-                        </p>
+    return (
+        <main className="dashboard-page">
+            {/* Decorative background */}
+            <div className="dashboard-glow dashboard-glow-one"></div>
+            <div className="dashboard-glow dashboard-glow-two"></div>
+
+            <div className="dashboard-container">
+
+                {/* =================================================
+                    HEADER
+                ================================================= */}
+
+                <header className="dashboard-header">
+
+                    <div className="dashboard-brand">
+                        <div className="dashboard-brand-icon">
+                            👥
+                        </div>
+
+                        <div>
+                            <h1>Employee Portal</h1>
+                            <span>Workspace Dashboard</span>
+                        </div>
                     </div>
 
-                    <div
-                        style={{
-                            display: "flex",
-                            gap: "10px",
-                        }}
-                    >
-                        {/* Admin Panel - Admin only */}
+                    <div className="dashboard-actions">
+
                         {user.role === "Admin" && (
                             <button
-                                onClick={() => router.push("/admin")}
-                                style={{
-                                    padding: "10px 18px",
-                                    background: "#4f46e5",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "8px",
-                                    cursor: "pointer",
-                                    fontWeight: "600",
-                                }}
+                                className="admin-button"
+                                onClick={() =>
+                                    router.push("/admin")
+                                }
                             >
+                                <span>⚙️</span>
                                 Admin Panel
                             </button>
                         )}
 
-                        {/* Logout */}
                         <button
+                            className="logout-button"
                             onClick={logout}
-                            style={{
-                                padding: "10px 18px",
-                                background: "#111827",
-                                color: "white",
-                                border: "none",
-                                borderRadius: "8px",
-                                cursor: "pointer",
-                            }}
                         >
                             Logout
                         </button>
                     </div>
-                </div>
+                </header>
 
-                {/* User Information */}
-                <div
-                    style={{
-                        background: "white",
-                        padding: "24px",
-                        borderRadius: "14px",
-                        marginBottom: "25px",
-                        boxShadow: "0 4px 15px rgba(0,0,0,0.05)",
-                    }}
-                >
-                    <h2
-                        style={{
-                            marginTop: 0,
-                            color: "#111827",
-                        }}
-                    >
-                        Account Information
-                    </h2>
+                {/* =================================================
+                    WELCOME BANNER
+                ================================================= */}
 
-                    <p>
-                        <strong>Name:</strong> {user.name}
-                    </p>
+                <section className="welcome-banner">
 
-                    <p>
-                        <strong>Email:</strong> {user.email}
-                    </p>
-
-                    <p>
-                        <strong>Role:</strong>{" "}
-                        <span
-                            style={{
-                                background: "#e0e7ff",
-                                color: "#3730a3",
-                                padding: "5px 10px",
-                                borderRadius: "20px",
-                                fontWeight: "600",
-                            }}
-                        >
-                            {user.role}
-                        </span>
-                    </p>
-                </div>
-
-                {/* Services */}
-                <h2
-                    style={{
-                        color: "#111827",
-                        marginBottom: "15px",
-                    }}
-                >
-                    Authorized Zoho Services
-                </h2>
-
-                <div
-                    style={{
-                        display: "grid",
-                        gridTemplateColumns:
-                            "repeat(auto-fit, minmax(240px, 1fr))",
-                        gap: "20px",
-                    }}
-                >
-                    {availableServices.map((service) => (
-                        <div
-                            key={service.name}
-                            style={{
-                                background: "white",
-                                padding: "24px",
-                                borderRadius: "14px",
-                                boxShadow:
-                                    "0 4px 15px rgba(0,0,0,0.05)",
-                            }}
-                        >
-                            <h3
-                                style={{
-                                    marginTop: 0,
-                                    color: "#111827",
-                                }}
-                            >
-                                {service.name}
-                            </h3>
-
-                            <p
-                                style={{
-                                    color: "#6b7280",
-                                    minHeight: "45px",
-                                }}
-                            >
-                                {service.description}
-                            </p>
-
-                            <button
-                                onClick={() => openService(service)}
-                                disabled={
-                                    loadingService === service.name
-                                }
-                                style={{
-                                    width: "100%",
-                                    padding: "11px",
-                                    background: "#111827",
-                                    color: "white",
-                                    border: "none",
-                                    borderRadius: "8px",
-                                    cursor: "pointer",
-                                }}
-                            >
-                                {loadingService === service.name
-                                    ? "Opening..."
-                                    : "Open Service"}
-                            </button>
+                    <div className="welcome-text">
+                        <div className="welcome-label">
+                            <span className="status-dot"></span>
+                            Workspace active
                         </div>
-                    ))}
-                </div>
 
-                {/* Result message */}
+                        <h2>
+                            Welcome back, {user.name.split(" ")[0]}! 👋
+                        </h2>
+
+                        <p>
+                            Access the tools and services available
+                            for your role.
+                        </p>
+                    </div>
+
+                    <div className="welcome-avatar">
+                        {getInitials(user.name)}
+                    </div>
+                </section>
+
+                {/* =================================================
+                    ACCOUNT INFORMATION
+                ================================================= */}
+
+                <section className="account-card">
+
+                    <div className="section-title">
+                        <div className="section-icon">
+                            👤
+                        </div>
+
+                        <div>
+                            <h2>Account Information</h2>
+                            <p>Your employee account details</p>
+                        </div>
+                    </div>
+
+                    <div className="account-details">
+
+                        <div className="account-item">
+                            <span className="account-label">
+                                Full Name
+                            </span>
+
+                            <strong>{user.name}</strong>
+                        </div>
+
+                        <div className="account-item">
+                            <span className="account-label">
+                                Email Address
+                            </span>
+
+                            <strong>{user.email}</strong>
+                        </div>
+
+                        <div className="account-item">
+                            <span className="account-label">
+                                Role
+                            </span>
+
+                            <span className="role-badge">
+                                <span>●</span>
+                                {user.role}
+                            </span>
+                        </div>
+
+                        <div className="account-item">
+                            <span className="account-label">
+                                Access Level
+                            </span>
+
+                            <strong>
+                                {user.role === "Admin"
+                                    ? "Full Access"
+                                    : "Role Based Access"}
+                            </strong>
+                        </div>
+
+                    </div>
+                </section>
+
+                {/* =================================================
+                    SERVICES
+                ================================================= */}
+
+                <section className="services-section">
+
+                    <div className="services-heading">
+
+                        <div>
+                            <span className="eyebrow">
+                                APPLICATIONS
+                            </span>
+
+                            <h2>Authorized Zoho Services</h2>
+
+                            <p>
+                                Services available based on your
+                                role and permissions.
+                            </p>
+                        </div>
+
+                        <div className="service-count">
+                            <strong>
+                                {availableServices.length}
+                            </strong>
+                            <span>
+                                {availableServices.length === 1
+                                    ? "Service"
+                                    : "Services"}{" "}
+                                Available
+                            </span>
+                        </div>
+
+                    </div>
+
+                    <div className="services-grid">
+
+                        {availableServices.map((service) => (
+                            <div
+                                className="service-card"
+                                key={service.name}
+                            >
+
+                                <div className="service-card-top">
+
+                                    <div className="service-icon">
+                                        {service.icon}
+                                    </div>
+
+                                    <span className="service-status">
+                                        <span></span>
+                                        Authorized
+                                    </span>
+
+                                </div>
+
+                                <div className="service-content">
+
+                                    <span className="service-category">
+                                        {service.category}
+                                    </span>
+
+                                    <h3>{service.name}</h3>
+
+                                    <p>
+                                        {service.description}
+                                    </p>
+
+                                </div>
+
+                                <button
+                                    className="service-button"
+                                    onClick={() =>
+                                        openService(service)
+                                    }
+                                    disabled={
+                                        loadingService ===
+                                        service.name
+                                    }
+                                >
+                                    {loadingService ===
+                                    service.name ? (
+                                        <>
+                                            <span className="button-spinner"></span>
+                                            Connecting...
+                                        </>
+                                    ) : (
+                                        <>
+                                            Open Service
+                                            <span className="button-arrow">
+                                                →
+                                            </span>
+                                        </>
+                                    )}
+                                </button>
+
+                            </div>
+                        ))}
+
+                    </div>
+                </section>
+
+                {/* =================================================
+                    RESULT MESSAGE
+                ================================================= */}
+
                 {message && (
                     <div
-                        style={{
-                            marginTop: "25px",
-                            padding: "16px",
-                            background: "white",
-                            borderRadius: "10px",
-                            border: "1px solid #e5e7eb",
-                            color: "#374151",
-                        }}
+                        className={`dashboard-message ${
+                            message.startsWith("❌")
+                                ? "message-error"
+                                : "message-success"
+                        }`}
                     >
-                        {message}
+                        <span className="message-icon">
+                            {message.startsWith("❌")
+                                ? "⚠️"
+                                : "✓"}
+                        </span>
+
+                        <span>{message.replace(/^❌ |^✅ /, "")}</span>
+
+                        <button
+                            onClick={() => setMessage("")}
+                            className="message-close"
+                        >
+                            ×
+                        </button>
                     </div>
                 )}
+
+                {/* =================================================
+                    FOOTER
+                ================================================= */}
+
+                <footer className="dashboard-footer">
+                    <span>🔐 Secure Employee Workspace</span>
+                    <span>•</span>
+                    <span>Role-based access enabled</span>
+                </footer>
+
             </div>
         </main>
     );
