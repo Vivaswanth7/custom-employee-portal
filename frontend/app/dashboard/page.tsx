@@ -93,7 +93,7 @@ export default function Dashboard() {
 
         try {
             const response = await fetch(
-                `http://localhost:5000${service.endpoint}`,
+                `https://custom-employee-portal-hy5w.onrender.com${service.endpoint}`,
                 {
                     method: "GET",
                     headers: {
