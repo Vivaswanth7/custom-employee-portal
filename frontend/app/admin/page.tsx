@@ -64,13 +64,13 @@ export default function AdminPage() {
 
             const [usersResponse, rolesResponse, logsResponse] =
                 await Promise.all([
-                    fetch("http://localhost:5000/api/admin/users", {
+                    fetch("https://custom-employee-portal-hy5w.onrender.com/api/admin/users", {
                         headers,
                     }),
-                    fetch("http://localhost:5000/api/admin/roles", {
+                    fetch("https://custom-employee-portal-hy5w.onrender.com/api/admin/roles", {
                         headers,
                     }),
-                    fetch("http://localhost:5000/api/admin/audit-logs", {
+                    fetch("https://custom-employee-portal-hy5w.onrender.com/api/admin/audit-logs", {
                         headers,
                     }),
                 ]);
@@ -109,7 +109,7 @@ export default function AdminPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/admin/users/${userId}/role`,
+                `https://custom-employee-portal-hy5w.onrender.com/api/admin/users/${userId}/role`,
                 {
                     method: "PUT",
                     headers: {
@@ -154,7 +154,7 @@ export default function AdminPage() {
             }
 
             const response = await fetch(
-                `http://localhost:5000/api/admin/users/${userId}/status`,
+                `https://custom-employee-portal-hy5w.onrender.com/api/admin/users/${userId}/status`,
                 {
                     method: "PUT",
                     headers: {
